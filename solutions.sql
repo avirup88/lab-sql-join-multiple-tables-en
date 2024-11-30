@@ -69,14 +69,14 @@ order by gross_revenue desc
 limit 5;
 
 #Is "Academy Dinosaur" available for rent from Store 1?
-select case when count(r.inventory_id) > 0 then 'Available' 
-else 'Not Available' end as Availability_Flag
-from inventory as i
-inner join rental as r
-on i.inventory_id = r.inventory_id
-where i.store_id = 1
-and film_id in (select f.film_id from film as f 
-where f.title =  "Academy Dinosaur");
+SELECT CASE
+  WHEN COUNT(i.inventory_id) - COUNT(r.rental_id) > 0 THEN 'Available'
+  ELSE 'Not Available'
+END AS Availability_Flag
+FROM inventory AS i
+LEFT JOIN rental AS r ON i.inventory_id = r.inventory_id AND r.return_date IS NULL
+WHERE i.store_id = 1
+AND i.film_id = (SELECT f.film_id FROM film AS f WHERE f.title = 'Academy Dinosaur');
 
 
 
